@@ -34,10 +34,38 @@ Backend:
 
 ---
 
-## Installation
+## Architecture
 
-### 1. Clone the repository
+The frontend handles user input, displays results, and manages CSV export.
 
-```bash
-git clone https://github.com/rowkav09/lead-scraper.git
-cd lead-scraper
+The backend performs the scraping logic and processes raw data into structured lead information before returning it to the frontend.
+
+---
+
+## Notes
+
+- The included scraper is basic and may require improvements for production use.
+- Large-scale scraping may require headless browsers (e.g. Selenium or Playwright).
+- Proxies and anti-bot handling may be necessary depending on usage.
+
+---
+
+## Future Improvements
+
+- Additional data sources
+- Database integration
+- Authentication system
+- API endpoints
+- Improved validation and error handling
+
+---
+
+## License
+
+GPL-3.0 License. See the LICENSE file for details.
+
+---
+
+## Author
+
+rowkav09
