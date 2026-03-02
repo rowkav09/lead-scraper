@@ -26,9 +26,24 @@ A professional web app for scraping business leads from Google Maps (no API, dir
 	```
 5. Open http://localhost:3000
 
-## Deploying to Vercel
-- Deploy as a Next.js app
-- Ensure Python is available in your deployment environment (Vercel serverless functions may require custom setup or use a separate backend for Python)
+
+## Deploying to GitHub Pages
+
+1. Ensure your app only uses static features (no API routes, no server-side rendering).
+2. Build and export the static site:
+	```
+	npm run build
+	npm run export
+	```
+	This will output static files to the `out/` directory.
+3. Deploy to GitHub Pages:
+	```
+	npm run gh-pages
+	```
+	This uses the `gh-pages` package to push the `out/` directory to the `gh-pages` branch.
+4. In your GitHub repository settings, set GitHub Pages to serve from the `gh-pages` branch (or `/docs` folder if you prefer to copy files there).
+
+**Note:** If your repository is not at the root domain (e.g., `username.github.io/repo`), set `basePath` in `next.config.ts` to your repo name (e.g., `/lead-scraper`).
 
 ## Notes
 - The Google Maps scraper is a placeholder. For real scraping, use Selenium/Playwright and handle anti-bot measures.
