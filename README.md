@@ -1,50 +1,71 @@
-# Lead Scraper Web App
+# Lead Scraper
 
-A professional web app for scraping business leads from Google Maps (no API, direct scraping). Enter a company category and area to get a table of results and download as CSV. Built with Next.js, Tailwind CSS, and a Python backend.
+Lead Scraper is a full-stack web application for generating business leads by scraping publicly available data based on a business category and geographic location.
 
-## Features
-- Input company category and area
-- Scrapes Google Maps (no API)
-- Results in a table and downloadable CSV
-- Clean, professional UI
-- Ready for Vercel deployment
-- Python backend for scraping (future: Facebook, more)
+The project consists of a Next.js frontend and a Python-based scraping backend.
 
-## Local Development
-1. Install Node.js, npm, and Python 3.13+
-2. Install dependencies:
-	```
-	npm install
-	```
-3. Install Python packages:
-	```
-	pip install requests beautifulsoup4
-	```
-4. Run the dev server:
-	```
-	npm run dev
-	```
-5. Open http://localhost:3000
+---
 
+## Overview
 
-## Deploying to GitHub Pages
+Lead Scraper allows users to:
 
-1. Ensure your app only uses static features (no API routes, no server-side rendering).
-2. Build and export the static site:
-	```
-	npm run build
-	npm run export
-	```
-	This will output static files to the `out/` directory.
-3. Deploy to GitHub Pages:
-	```
-	npm run gh-pages
-	```
-	This uses the `gh-pages` package to push the `out/` directory to the `gh-pages` branch.
-4. In your GitHub repository settings, set GitHub Pages to serve from the `gh-pages` branch (or `/docs` folder if you prefer to copy files there).
+- Enter a business category (e.g. plumbers, cafés, car washes)
+- Enter a target location
+- Scrape publicly available business listings
+- View results in a structured table
+- Export results as a CSV file
 
-**Note:** If your repository is not at the root domain (e.g., `username.github.io/repo`), set `basePath` in `next.config.ts` to your repo name (e.g., `/lead-scraper`).
+The scraper does not rely on official APIs.
+
+---
+
+## Tech Stack
+
+Frontend:
+- Next.js
+- React
+- Tailwind CSS
+
+Backend:
+- Python
+- requests
+- beautifulsoup4
+
+---
+
+## Architecture
+
+The frontend handles user input, displays results, and manages CSV export.
+
+The backend performs the scraping logic and processes raw data into structured lead information before returning it to the frontend.
+
+---
 
 ## Notes
-- The Google Maps scraper is a placeholder. For real scraping, use Selenium/Playwright and handle anti-bot measures.
-- Extendable for Facebook and other sources.
+
+- The included scraper is basic and may require improvements for production use.
+- Large-scale scraping may require headless browsers (e.g. Selenium or Playwright).
+- Proxies and anti-bot handling may be necessary depending on usage.
+
+---
+
+## Future Improvements
+
+- Additional data sources
+- Database integration
+- Authentication system
+- API endpoints
+- Improved validation and error handling
+
+---
+
+## License
+
+GPL-3.0 License. See the LICENSE file for details.
+
+---
+
+## Author
+
+rowkav09
