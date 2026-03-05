@@ -1,1 +1,0 @@
-i want to deploy on vercel instead of git pages also fix any structure or other errors

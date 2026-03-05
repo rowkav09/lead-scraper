@@ -4,7 +4,6 @@ from playwright.sync_api import sync_playwright, Page
 from dataclasses import dataclass, asdict
 import pandas as pd
 import argparse
-import platform
 import time
 import os
 
@@ -38,7 +37,6 @@ def extract_text(page: Page, xpath: str) -> str:
     return ""
 
 def extract_place(page: Page) -> Place:
-    # XPaths
     name_xpath = '//div[@class="TIHn2 "]//h1[@class="DUwDvf lfPIob"]'
     address_xpath = '//button[@data-item-id="address"]//div[contains(@class, "fontBodyMedium")]'
     website_xpath = '//a[@data-item-id="authority"]//div[contains(@class, "fontBodyMedium")]'
@@ -61,7 +59,6 @@ def extract_place(page: Page) -> Place:
     place.place_type = extract_text(page, place_type_xpath)
     place.introduction = extract_text(page, intro_xpath) or "None Found"
 
-    # Reviews Count
     reviews_count_raw = extract_text(page, reviews_count_xpath)
     if reviews_count_raw:
         try:
@@ -69,7 +66,7 @@ def extract_place(page: Page) -> Place:
             place.reviews_count = int(temp)
         except Exception as e:
             logging.warning(f"Failed to parse reviews count: {e}")
-    # Reviews Average
+
     reviews_avg_raw = extract_text(page, reviews_average_xpath)
     if reviews_avg_raw:
         try:
@@ -77,7 +74,7 @@ def extract_place(page: Page) -> Place:
             place.reviews_average = float(temp)
         except Exception as e:
             logging.warning(f"Failed to parse reviews average: {e}")
-    # Store Info
+
     for idx, info_xpath in enumerate([info1, info2, info3]):
         info_raw = extract_text(page, info_xpath)
         if info_raw:
@@ -90,7 +87,7 @@ def extract_place(page: Page) -> Place:
                     place.in_store_pickup = "Yes"
                 if 'delivery' in check:
                     place.store_delivery = "Yes"
-    # Opens At
+
     opens_at_raw = extract_text(page, opens_at_xpath)
     if opens_at_raw:
         opens = opens_at_raw.split('⋅')
@@ -106,17 +103,14 @@ def extract_place(page: Page) -> Place:
                 place.opens_at = opens[1].replace("\u202f","")
             else:
                 place.opens_at = opens_at2_raw.replace("\u202f","")
+
     return place
 
 def scrape_places(search_for: str, total: int) -> List[Place]:
     setup_logging()
     places: List[Place] = []
     with sync_playwright() as p:
-        if platform.system() == "Windows":
-            browser_path = r"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-            browser = p.chromium.launch(executable_path=browser_path, headless=False)
-        else:
-            browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         try:
             page.goto("https://www.google.com/maps/@32.9817464,70.1930781,3.67z?", timeout=60000)
@@ -125,6 +119,7 @@ def scrape_places(search_for: str, total: int) -> List[Place]:
             page.keyboard.press("Enter")
             page.wait_for_selector('//a[contains(@href, "https://www.google.com/maps/place")]')
             page.hover('//a[contains(@href, "https://www.google.com/maps/place")]')
+
             previously_counted = 0
             while True:
                 page.mouse.wheel(0, 10000)
@@ -137,14 +132,16 @@ def scrape_places(search_for: str, total: int) -> List[Place]:
                     logging.info("Arrived at all available")
                     break
                 previously_counted = found
+
             listings = page.locator('//a[contains(@href, "https://www.google.com/maps/place")]').all()[:total]
             listings = [listing.locator("xpath=..") for listing in listings]
             logging.info(f"Total Found: {len(listings)}")
+
             for idx, listing in enumerate(listings):
                 try:
                     listing.click()
                     page.wait_for_selector('//div[@class="TIHn2 "]//h1[@class="DUwDvf lfPIob"]', timeout=10000)
-                    time.sleep(1.5)  # Give time for details to load
+                    time.sleep(1.5)
                     place = extract_place(page)
                     if place.name:
                         places.append(place)
@@ -171,18 +168,14 @@ def save_places_to_csv(places: List[Place], output_path: str = "result.csv", app
         logging.warning("No data to save. DataFrame is empty.")
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-s", "--search", type=str, help="Search query for Google Maps")
-    parser.add_argument("-t", "--total", type=int, help="Total number of results to scrape")
-    parser.add_argument("-o", "--output", type=str, default="result.csv", help="Output CSV file path")
-    parser.add_argument("--append", action="store_true", help="Append results to the output file instead of overwriting")
+    parser = argparse.ArgumentParser(description="Scrape business leads from Google Maps")
+    parser.add_argument("-s", "--search", type=str, required=True, help='Search query, e.g. "Plumber in New York"')
+    parser.add_argument("-t", "--total", type=int, default=10, help="Number of results to scrape (default: 10)")
+    parser.add_argument("-o", "--output", type=str, default="result.csv", help="Output CSV file path (default: result.csv)")
+    parser.add_argument("--append", action="store_true", help="Append to existing output file instead of overwriting")
     args = parser.parse_args()
-    search_for = args.search or "turkish stores in toronto Canada"
-    total = args.total or 1
-    output_path = args.output
-    append = args.append
-    places = scrape_places(search_for, total)
-    save_places_to_csv(places, output_path, append=append)
+    places = scrape_places(args.search, args.total)
+    save_places_to_csv(places, args.output, append=args.append)
 
 if __name__ == "__main__":
     main()

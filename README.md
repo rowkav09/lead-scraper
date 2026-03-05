@@ -1,71 +1,38 @@
-# Lead Scraper
+# MapLeads
 
-Lead Scraper is a full-stack web application for generating business leads by scraping publicly available data based on a business category and geographic location.
+Generate business leads from Google Maps. Enter a business type and location, get contact details, ratings, and more.
 
-The project consists of a Next.js frontend and a Python-based scraping backend.
+## How to Use
 
----
+1. Enter a **business type** (e.g. "Plumber", "Dentist", "Restaurant")
+2. Enter a **location** (e.g. "Toronto", "New York", "London")
+3. Choose how many results you want (5, 10, 20, or 50)
+4. Click **Search for Leads**
+5. Browse results in the table
+6. Click **Export CSV** to download your leads
 
-## Overview
+## Tips
 
-Lead Scraper allows users to:
+- Be specific with your searches — "Emergency Plumber in Brooklyn" gives better results than just "Plumber"
+- Start with 10 results to get a quick preview, then increase if needed
+- More results take longer to scrape
+- CSV exports include all fields: name, phone, website, address, rating, reviews, category, hours, store shopping, pickup, delivery, and business description
 
-- Enter a business category (e.g. plumbers, cafés, car washes)
-- Enter a target location
-- Scrape publicly available business listings
-- View results in a structured table
-- Export results as a CSV file
+## Data Collected
 
-The scraper does not rely on official APIs.
+| Field | Description |
+|-------|-------------|
+| Business Name | Name of the business |
+| Phone | Phone number |
+| Website | Business website URL |
+| Rating | Average Google review rating (1–5) |
+| Reviews | Total number of Google reviews |
+| Category | Business type/category |
+| Address | Full street address |
+| Hours | Opening hours |
 
----
-
-## Tech Stack
-
-Frontend:
-- Next.js
-- React
-- Tailwind CSS
-
-Backend:
-- Python
-- requests
-- beautifulsoup4
-
----
-
-## Architecture
-
-The frontend handles user input, displays results, and manages CSV export.
-
-The backend performs the scraping logic and processes raw data into structured lead information before returning it to the frontend.
-
----
-
-## Notes
-
-- The included scraper is basic and may require improvements for production use.
-- Large-scale scraping may require headless browsers (e.g. Selenium or Playwright).
-- Proxies and anti-bot handling may be necessary depending on usage.
-
----
-
-## Future Improvements
-
-- Additional data sources
-- Database integration
-- Authentication system
-- API endpoints
-- Improved validation and error handling
-
----
+CSV exports include additional fields: store shopping, in-store pickup, delivery availability, and business introduction.
 
 ## License
 
-GPL-3.0 License. See the LICENSE file for details.
-
----
-
-## Author
-
-rowkav09
+GPL-3.0 — see [LICENSE](LICENSE).

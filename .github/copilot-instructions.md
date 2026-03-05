@@ -1,44 +1,20 @@
-- [ ] Clarify Project Requirements
+- [x] Clarify Project Requirements
 - [x] Scaffold the Project
 - [x] Customize the Project
 - [x] Install Required Extensions
 - [x] Compile the Project
-- [ ] Create and Run Task
-- [ ] Launch the Project
+- [x] Create and Run Task
+- [x] Launch the Project
 - [x] Ensure Documentation is Complete
 
-# Lead Scraper Web App
+# MapLeads
 
-A professional web app for scraping business leads from Google Maps (no API, direct scraping). Enter a company category and area to get a table of results and download as CSV. Built with Next.js, Tailwind CSS, and a Python backend.
+A web app for scraping business leads from Google Maps. Enter a business type and location, get a table of results, and download as CSV. Built with Next.js, Tailwind CSS, and a Python (FastAPI + Playwright) backend.
 
 ## Features
-- Input company category and area
-- Scrapes Google Maps (no API)
-- Results in a table and downloadable CSV
-- Clean, professional UI
-- Ready for Vercel deployment
-- Python backend for scraping (future: Facebook, more)
-
-## Local Development
-1. Install Node.js, npm, and Python 3.13+
-2. Install dependencies:
-   ```
-   npm install
-   ```
-3. Install Python packages:
-   ```
-   pip install requests beautifulsoup4
-   ```
-4. Run the dev server:
-   ```
-   npm run dev
-   ```
-5. Open http://localhost:3000
-
-## Deploying to Vercel
-- Deploy as a Next.js app
-- Ensure Python is available in your deployment environment (Vercel serverless functions may require custom setup or use a separate backend for Python)
-
-## Notes
-- The Google Maps scraper is a placeholder. For real scraping, use Selenium/Playwright and handle anti-bot measures.
-- Extendable for Facebook and other sources.
+- Search by business type and location
+- Scrapes Google Maps directly (no API keys)
+- Results displayed in a sortable table
+- Export results as CSV
+- Dark-themed professional UI
+- Python backend running headless Playwright

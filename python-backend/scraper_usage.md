@@ -1,26 +1,33 @@
-## Usage
+# MapLeads — Usage Guide
 
-Run the script with your desired search term and number of results:
+## How to Use
 
-```bash
-python main.py -s "Turkish Restaurants in Toronto Canada" -t 20
-```
+1. Enter a **Business Type** (e.g. Plumber, Dentist, Hair Salon)
+2. Enter a **Location** (e.g. New York, London, Toronto)
+3. Choose how many results to scrape (5, 10, 20, or 50)
+4. Click **Search for Leads**
+5. Results appear in a table — click **Export CSV** to download
 
-- `-s` or `--search`: Search query for Google Maps (default: "turkish stores in toronto Canada")
-- `-t` or `--total`: Number of results to scrape (default: 1)
-- `-o` or `--output`: Output CSV file path (default: result.csv)
-- `--append`: Append results to the output file instead of overwriting (default: off)
+## Data Fields
 
-## Example
+Each lead includes:
 
-Append new results to an existing CSV file:
-```bash
-python main.py -s "Turkish Restaurants in Toronto Canada" -t 20 -o toronto_turkish_restaurants.csv --append
-```
+| Field | Description |
+|-------|-------------|
+| Business Name | Name of the business |
+| Phone | Contact phone number |
+| Website | Business website |
+| Rating | Google star rating (1–5) |
+| Reviews | Total number of Google reviews |
+| Category | Business type |
+| Address | Street address |
+| Hours | Opening hours |
 
-The script will launch a browser, perform the search, and start scraping information. Progress will be displayed in the terminal, and results will be saved to the specified CSV file. If `--append` is used, new results will be added to the end of the file without removing previous data.
+CSV exports also include: store shopping, in-store pickup, delivery availability, and business description.
 
-## Notes
-- The script opens a visible browser window (not headless) for scraping.
-- Google Maps DOM may change, which can break the script. If you encounter issues, update the XPaths in `main.py`.
-- Avoid running too many scrapes in a short period to prevent being blocked by Google.
+## Tips
+
+- Be specific: "Emergency Plumber in Brooklyn" gives better results than "Plumber"
+- Start with 10 results to preview, then increase if needed
+- More results take longer to scrape
+- Google Maps results vary by region and time
