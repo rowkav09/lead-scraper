@@ -1,3 +1,4 @@
+import csv
 import logging
 from typing import List, Optional
 from playwright.sync_api import sync_playwright, Page
@@ -156,10 +157,15 @@ def scrape_places(search_for: str, total: int) -> List[Place]:
 def save_places_to_csv(places: List[Place], output_path: str = "result.csv", append: bool = False):
     df = pd.DataFrame([asdict(place) for place in places])
     if not df.empty:
-        for column in df.columns:
-            if df[column].nunique() == 1:
-                df.drop(column, axis=1, inplace=True)
         file_exists = os.path.isfile(output_path)
+        if append and file_exists and os.path.getsize(output_path) > 0:
+            with open(output_path, newline="", encoding="utf-8") as existing:
+                existing_header = next(csv.reader(existing), [])
+            if existing_header != list(df.columns):
+                raise ValueError("CSV columns do not match. Choose a new output file or migrate the existing CSV before appending.")
+        elif append and file_exists:
+            # A zero-byte file has no header to append beneath.
+            file_exists = False
         mode = "a" if append else "w"
         header = not (append and file_exists)
         df.to_csv(output_path, index=False, mode=mode, header=header)
