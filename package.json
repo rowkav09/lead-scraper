@@ -8,7 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "15.1.11",
+    "next": "^15.5.26",
     "react": "^19",
     "react-dom": "^19"
   },
@@ -22,5 +22,8 @@
     "ghost-deps": "^0.1.6",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": "^8.5.28"
   }
 }
