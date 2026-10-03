@@ -29,6 +29,12 @@ export async function POST(req: NextRequest): Promise<Response> {
     });
 
     const data = await upstream.json();
+    if (!upstream.ok && data && typeof data === 'object' && !('error' in data)) {
+      // FastAPI reports failures as { detail }, but the page reads { error }.
+      const detail = (data as { detail?: unknown }).detail;
+      const error = typeof detail === 'string' && detail ? detail : 'The scraper rejected the request.';
+      return NextResponse.json({ error }, { status: upstream.status });
+    }
     return NextResponse.json(data, { status: upstream.status });
   } catch (err) {
     console.error('Scraper proxy error:', err);
