@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { formatWebsite, websiteHref } from "../lib/website";
+import { leadsToCsv } from "../lib/csv";
 
 type Lead = {
   name: string;
@@ -138,11 +139,7 @@ export default function Home() {
 
   const downloadCsv = () => {
     if (!leads.length) return;
-    const headers = Object.keys(leads[0]) as (keyof Lead)[];
-    const rows = leads.map((lead) =>
-      headers.map((h) => `"${String(lead[h] ?? "").replace(/"/g, '""')}"`).join(",")
-    );
-    const csv = [headers.join(","), ...rows].join("\n");
+    const csv = leadsToCsv(leads);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
