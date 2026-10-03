@@ -107,6 +107,30 @@ def extract_place(page: Page) -> Place:
 
     return place
 
+RESULT_LINK = '//a[contains(@href, "https://www.google.com/maps/place")]'
+
+def scroll_results(page: Page, total: int, settle_ms: int = 500, max_waits: int = 6) -> int:
+    """Scroll the results list until `total` are loaded or the list really ends."""
+    previously_counted = 0
+    while True:
+        page.mouse.wheel(0, 10000)
+        page.wait_for_selector(RESULT_LINK)
+        # New results load a moment after the scroll. Give them time to show up
+        # before treating an unchanged count as the end of the list.
+        found = page.locator(RESULT_LINK).count()
+        waits = 0
+        while found <= previously_counted and found < total and waits < max_waits:
+            page.wait_for_timeout(settle_ms)
+            found = page.locator(RESULT_LINK).count()
+            waits += 1
+        logging.info(f"Currently Found: {found}")
+        if found >= total:
+            return found
+        if found <= previously_counted:
+            logging.info("Arrived at all available")
+            return found
+        previously_counted = found
+
 def scrape_places(search_for: str, total: int) -> List[Place]:
     setup_logging()
     places: List[Place] = []
@@ -121,18 +145,7 @@ def scrape_places(search_for: str, total: int) -> List[Place]:
             page.wait_for_selector('//a[contains(@href, "https://www.google.com/maps/place")]')
             page.hover('//a[contains(@href, "https://www.google.com/maps/place")]')
 
-            previously_counted = 0
-            while True:
-                page.mouse.wheel(0, 10000)
-                page.wait_for_selector('//a[contains(@href, "https://www.google.com/maps/place")]')
-                found = page.locator('//a[contains(@href, "https://www.google.com/maps/place")]').count()
-                logging.info(f"Currently Found: {found}")
-                if found >= total:
-                    break
-                if found == previously_counted:
-                    logging.info("Arrived at all available")
-                    break
-                previously_counted = found
+            scroll_results(page, total)
 
             listings = page.locator('//a[contains(@href, "https://www.google.com/maps/place")]').all()[:total]
             listings = [listing.locator("xpath=..") for listing in listings]
