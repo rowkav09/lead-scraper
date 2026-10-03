@@ -24,3 +24,24 @@ test('valid body still forwards to scraper and preserves its status', async () =
     assert.deepEqual(sent, { category: 'plumber', location: 'London', total: 10 });
   } finally { globalThis.fetch = original; }
 });
+test('non-string or blank category/location and bad totals are 400s without an upstream request', async () => {
+  const original = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => { calls++; return Response.json({}); };
+  try {
+    const bad = [
+      { category: 5, location: 'London' },
+      { category: {}, location: 'London' },
+      { category: '  ', location: 'London' },
+      { category: 'plumber', location: ['London'] },
+      { category: 'plumber', location: 'London', total: 'ten' },
+      { category: 'plumber', location: 'London', total: 2.5 },
+    ];
+    for (const b of bad) {
+      const response = await POST(new Request('http://local/api/scrape', { method: 'POST', body: JSON.stringify(b) }));
+      assert.equal(response.status, 400, JSON.stringify(b));
+      assert.equal(typeof (await response.json()).error, 'string');
+    }
+    assert.equal(calls, 0);
+  } finally { globalThis.fetch = original; }
+});

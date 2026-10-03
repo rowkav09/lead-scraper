@@ -14,8 +14,11 @@ export async function POST(req: NextRequest): Promise<Response> {
   }
   const { category, location, total } = body as Record<string, unknown>;
 
-  if (!category || !location) {
+  if (typeof category !== 'string' || typeof location !== 'string' || !category.trim() || !location.trim()) {
     return NextResponse.json({ error: 'Missing category or location' }, { status: 400 });
+  }
+  if (total !== undefined && total !== null && !Number.isInteger(total)) {
+    return NextResponse.json({ error: 'total must be a whole number' }, { status: 400 });
   }
 
   try {
