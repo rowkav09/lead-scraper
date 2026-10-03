@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { formatWebsite, websiteHref } from "../lib/website";
 
 type Lead = {
   name: string;
@@ -151,15 +152,6 @@ export default function Home() {
     URL.revokeObjectURL(url);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
-  };
-
-  const formatWebsite = (url: string) => {
-    return url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0];
-  };
-
-  const websiteHref = (url: string) => {
-    if (url.startsWith("http")) return url;
-    return `https://${url}`;
   };
 
   return (
