@@ -193,6 +193,8 @@ def main():
     parser.add_argument("-o", "--output", type=str, default="result.csv", help="Output CSV file path (default: result.csv)")
     parser.add_argument("--append", action="store_true", help="Append to existing output file instead of overwriting")
     args = parser.parse_args()
+    if args.total < 1:
+        parser.error("total must be a positive integer")
     places = scrape_places(args.search, args.total)
     save_places_to_csv(places, args.output, append=args.append)
 
