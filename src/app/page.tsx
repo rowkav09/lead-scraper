@@ -99,6 +99,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [searchLabel, setSearchLabel] = useState("");
+  const [resultQuery, setResultQuery] = useState({ category: "", location: "" });
   const [error, setError] = useState("");
   const [loadingStep, setLoadingStep] = useState(0);
   const [showToast, setShowToast] = useState(false);
@@ -126,6 +127,7 @@ export default function Home() {
       });
       const data = await res.json();
       if (res.ok) {
+        setResultQuery({ category, location });
         setLeads(data.data ?? []);
         setSearchLabel(data.search ?? `${category} in ${location}`);
       } else {
@@ -144,7 +146,7 @@ export default function Home() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `leads_${category.replace(/\s+/g, "_")}_${location.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.csv`;
+    a.download = `leads_${resultQuery.category.replace(/\s+/g, "_")}_${resultQuery.location.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
     setShowToast(true);
